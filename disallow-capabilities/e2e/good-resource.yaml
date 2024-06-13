@@ -1,9 +1,0 @@
-###### Pods - Good
-apiVersion: v1
-kind: Pod
-metadata:
-  name: goodpod01
-spec:
-  containers:
-  - name: container01
-    image: nginx

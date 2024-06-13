@@ -29,7 +29,7 @@ jobs:
           - name: v1.29
             version: v1.29.2
         tests:
-          - ^disallow-capabilities$
+          - ^pod-security$
     runs-on: ubuntu-latest
     name: ${{ matrix.k8s-version.name }} - ${{ matrix.tests }}
     steps:
