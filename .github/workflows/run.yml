@@ -110,9 +110,18 @@ jobs:
         run: |
           set -e
           chainsaw test --config .chainsaw.yaml --include-test-regex '^chainsaw$/${{ matrix.tests }}' --no-color=false
+      - name: Uninstall kyverno v1.10
+        run: |
+          set -e
+          kubectl delete -f https://github.com/kyverno/kyverno/releases/download/v1.11.0/install.yaml
+      - name: Wait for kyverno 
+        run: |
+          set -e
+          sleep 30
       - name: Install N4K v1.10
         run: |
           helm repo add nirmata https://nirmata.github.io/kyverno-charts/
+          helm repo update
           helm install kyverno nirmata/kyverno \
             --version=v3.0.29 \
             --namespace kyverno \
@@ -147,7 +156,8 @@ jobs:
       - name: Install N4K v1.11
         run: |
           helm repo add nirmata https://nirmata.github.io/kyverno-charts/
-          helm install kyverno nirmata/kyverno \
+          helm repo update
+          helm upgrade --install kyverno nirmata/kyverno \
             --version=v3.1.17 \
             --namespace kyverno \
             --create-namespace 
