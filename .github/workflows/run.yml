@@ -93,7 +93,7 @@ jobs:
       - name: Install kyverno v1.11
         run: |
           set -e
-          kubectl apply -f https://github.com/kyverno/kyverno/releases/download/v1.11.0/install.yaml
+          kubectl create -f https://github.com/kyverno/kyverno/releases/download/v1.11.0/install.yaml
       - name: Wait for kyverno ready
         run: |
           set -e
