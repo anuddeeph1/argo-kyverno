@@ -157,8 +157,7 @@ jobs:
         run: |
           helm repo add nirmata https://nirmata.github.io/kyverno-charts/
           helm repo update
-          helm uninstall kyverno nirmata/kyverno \
-            --namespace kyverno
+          helm uninstall kyverno --namespace kyverno
           sleep 30
           helm upgrade --install kyverno nirmata/kyverno \
             --version=v3.1.17 \
