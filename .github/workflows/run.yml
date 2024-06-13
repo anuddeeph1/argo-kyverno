@@ -82,10 +82,18 @@ jobs:
         run: |
           set -e
           chainsaw test --config .chainsaw.yaml --include-test-regex '^chainsaw$/${{ matrix.tests }}' --no-color=false
+      - name: Uninstall kyverno v1.10
+        run: |
+          set -e
+          kubectl delete -f https://github.com/kyverno/kyverno/releases/download/v1.10.0/install.yaml
+      - name: Wait for kyverno 
+        run: |
+          set -e
+          sleep 30
       - name: Install kyverno v1.11
         run: |
           set -e
-          kubectl create -f https://github.com/kyverno/kyverno/releases/download/v1.11.0/install.yaml
+          kubectl apply -f https://github.com/kyverno/kyverno/releases/download/v1.11.0/install.yaml
       - name: Wait for kyverno ready
         run: |
           set -e
