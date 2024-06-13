@@ -62,10 +62,10 @@ jobs:
         run: |
           set -e
           kind create cluster --image kindest/node:${{ matrix.k8s-version.version }} --config ./.github/kind.yml
-      - name: Install latest kyverno
+      - name: Install kyverno v1.10
         run: |
           set -e
-          kubectl create -f https://github.com/kyverno/kyverno/raw/main/config/install-latest-testing.yaml
+          kubectl create -f https://github.com/kyverno/kyverno/releases/download/v1.10.0/install.yaml
       - name: Wait for kyverno ready
         run: |
           set -e
@@ -82,3 +82,24 @@ jobs:
         run: |
           set -e
           chainsaw test --config .chainsaw.yaml --include-test-regex '^chainsaw$/${{ matrix.tests }}' --no-color=false
+      - name: Install kyverno v1.11
+        run: |
+          set -e
+          kubectl create -f https://github.com/kyverno/kyverno/releases/download/v1.11.0/install.yaml
+      - name: Wait for kyverno ready
+        run: |
+          set -e
+          kubectl wait --namespace kyverno --for=condition=ready pod --selector '!job-name' --timeout=60s
+      - name: Install CRDs
+        run: |
+          set -e
+          kubectl apply -f ./.chainsaw/crds
+      - name: Install Chainsaw
+        uses: kyverno/action-install-chainsaw@995cddaee7702e849270b84fa44cdcebe7462da8 # v0.1.9
+      - name: Test with Chainsaw
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          chainsaw test --config .chainsaw.yaml --include-test-regex '^chainsaw$/${{ matrix.tests }}' --no-color=false
+
